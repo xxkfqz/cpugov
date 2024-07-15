@@ -1,0 +1,3 @@
+Usage:
+        cpugov.pl               # Print available governors
+        cpugov.pl [some_name]   # Set governor
