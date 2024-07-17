@@ -8,30 +8,30 @@ my $baseDir = '/sys/devices/system/cpu';
 
 sub getCurrentGovernor {
     open(FH, '<', "$baseDir/cpu0/cpufreq/scaling_governor") || die "Could not read governor: $!";
-    (my $curGovernor = <FH>) =~ s/\R//g;
+    (my $currentGovernor = <FH>) =~ s/\R//g;
     close FH;
 
-    $curGovernor;
+    $currentGovernor;
 }
 
 sub getAvailabeGovernors {
     my $govListFile = "$baseDir/cpu0/cpufreq/scaling_available_governors";
     open(FH, '<', $govListFile)
         || die "Could not open '$govListFile': $!";
-    my @availableGoverors = split(' ', <FH>);
+    my @availableGovernors = split(' ', <FH>);
     close FH;
 
-    @availableGoverors;
+    @availableGovernors;
 }
 
 my $currentGovernor = getCurrentGovernor;
-my @availableGoverors = getAvailabeGovernors;
+my @availableGovernors = getAvailabeGovernors;
 
 if ($#ARGV < 0) {
     # Just print available governors
     print "Available governors:\n";
 
-    for (@availableGoverors) {
+    for (@availableGovernors) {
         my $ch = '  ';
         if ($_ eq $currentGovernor) {
             $ch = '->';
@@ -41,7 +41,7 @@ if ($#ARGV < 0) {
 } else {
     # Set governor
     my $newGovernor = shift;
-    grep(/^$newGovernor$/, @availableGoverors)
+    grep(/^$newGovernor$/, @availableGovernors)
         || die "Governor '$newGovernor' not available\n";
 
     opendir(my $dirHandler, $baseDir)
