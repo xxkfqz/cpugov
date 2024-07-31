@@ -7,7 +7,8 @@ use strict;
 my $baseDir = '/sys/devices/system/cpu';
 
 sub getCurrentGovernor {
-    open(FH, '<', "$baseDir/cpu0/cpufreq/scaling_governor") || die "Could not read governor: $!";
+    open(FH, '<', "$baseDir/cpu0/cpufreq/scaling_governor")
+        || die "Could not read governor: $!\n";
     (my $currentGovernor = <FH>) =~ s/\R//g;
     close FH;
 
