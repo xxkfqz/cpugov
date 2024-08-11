@@ -18,7 +18,7 @@ sub getCurrentGovernor {
 sub getAvailabeGovernors {
     my $govListFile = "$baseDir/cpu0/cpufreq/scaling_available_governors";
     open(FH, '<', $govListFile)
-        || die "Could not open '$govListFile': $!";
+        || die "Could not open '$govListFile': $!\n";
     my @availableGovernors = split(' ', <FH>);
     close FH;
 
