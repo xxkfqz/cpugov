@@ -9,10 +9,10 @@ my $baseDir = '/sys/devices/system/cpu';
 sub getCurrentGovernor {
     open(FH, '<', "$baseDir/cpu0/cpufreq/scaling_governor")
         || die "Could not read governor: $!\n";
-    (my $currentGovernor = <FH>) =~ s/\R//g;
+    (my $curGovernor = <FH>) =~ s/\R//g;
     close FH;
 
-    $currentGovernor;
+    $curGovernor;
 }
 
 sub getAvailabeGovernors {
@@ -32,16 +32,27 @@ if ($#ARGV < 0) {
     # Just print available governors
     print "Available governors:\n";
 
-    for (@availableGovernors) {
+    for my $index (0 .. $#availableGovernors) {
         my $ch = '  ';
-        if ($_ eq $currentGovernor) {
+        if ($availableGovernors[$index] eq $currentGovernor) {
             $ch = '->';
         }
-        print " $ch $_\n";
+        print " [$index] $ch $availableGovernors[$index]\n";
     }
 } else {
     # Set governor
     my $newGovernor = shift;
+
+    # Is governor index?
+    if ($newGovernor =~ /^\d+$/) {
+        my $index = $newGovernor;
+        $newGovernor = $availableGovernors[$index];
+
+        unless ($newGovernor) {
+            die "Not found governor with index $index\n";
+        }
+    }
+
     grep(/^$newGovernor$/, @availableGovernors)
         || die "Governor '$newGovernor' not available\n";
 
