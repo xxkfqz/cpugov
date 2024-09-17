@@ -6,6 +6,11 @@ use strict;
 
 my $baseDir = '/sys/devices/system/cpu';
 
+sub checkOs {
+    $^O eq 'linux'
+        || die "Non-linux OSes are not supported\n";
+}
+
 sub getCurrentGovernor {
     open(FH, '<', "$baseDir/cpu0/cpufreq/scaling_governor")
         || die "Could not read governor: $!\n";
@@ -24,6 +29,8 @@ sub getAvailabeGovernors {
 
     @availableGovernors;
 }
+
+checkOs;
 
 my $currentGovernor = getCurrentGovernor;
 my @availableGovernors = getAvailabeGovernors;
